@@ -374,13 +374,12 @@ grade:
 ##
 
 submit-check:
-	@if ! test -d .git; then \
+	@if ! git rev-parse --git-dir > /dev/null 2>&1; then \
 		echo No .git directory, is this a git repository?; \
 		false; \
 	fi
-	@if test "$$(git symbolic-ref HEAD)" != refs/heads/$(LAB); then \
-		git branch; \
-		read -p "You are not on the $(LAB) branch.  Hand-in the current branch? [y/N] " r; \
+	@if test "$$(basename "$$PWD")" != "$(LAB)"; then \
+		read -p "You are not in the $(LAB) folder (currently in $$(basename "$$PWD")).  Hand in this folder anyway? [y/N] " r; \
 		test "$$r" = y; \
 	fi
 	@if ! git diff-files --quiet || ! git diff-index --quiet --cached HEAD; then \
